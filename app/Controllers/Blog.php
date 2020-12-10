@@ -7,8 +7,11 @@ class Blog extends BaseController
 
 
 	function post($slug){
+		$model = new BlogModel();
+		$data['post'] = $model->getPosts($slug);
 
-		echo view('templates/header');
+
+		echo view('templates/header', $data);
 		echo view('blog/post');
 		echo view('templates/footer');
 
@@ -33,7 +36,9 @@ class Blog extends BaseController
 					'slug' => url_title($this->request->getVar('title')),
 				]
 			);	
-			
+
+			$session = \Config\Services::session();
+			$session->setFlashdata('success', 'New post was uploaded');
 
 			return redirect()->to('/');	
 		}
