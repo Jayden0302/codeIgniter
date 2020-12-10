@@ -32,6 +32,7 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Pages::index');
 $routes->get('blog/create', 'Blog::create');
+$routes->get('blog/(:any)', 'Blog::post/$1');
 $routes->get('(:any)', 'Pages::showme/$1');
 /**
  * --------------------------------------------------------------------
