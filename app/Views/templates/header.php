@@ -23,7 +23,7 @@
 			</ul>
 			<u1>
 				<li class="nav-item">
-					<a class="btn btn-outline-success" href="/blog/create">Create Post</a>
+					<a class="btn btn-outline-success" href="/login">Create Post</a>
 				</li>
 			</u1>
 		</div>

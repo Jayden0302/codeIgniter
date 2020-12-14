@@ -3,8 +3,8 @@
 use CodeIgniter\Model;
 
 class BlogModel extends Model{
-	protected $table = 'posts';
-	protected $allowedFields =['title','slug','body'];
+	protected $table = 'user';
+	protected $allowedFields =['username','password','status'];
 
 	public function getPosts($slug = null){
 		if(!$slug){

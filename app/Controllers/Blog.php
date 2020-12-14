@@ -4,10 +4,8 @@
 use App\Models\BlogModel;
 class Blog extends BaseController
 {
-
-
 	function post($slug){
-		$model = new BlogModel();
+		$model = new BlogModel(); 
 		$data['post'] = $model->getPosts($slug);
 
 
