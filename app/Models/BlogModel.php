@@ -10,7 +10,7 @@ class BlogModel extends Model{
 		if(!$slug){
 			return $this->findAll();
 		}
-
+		
 		return $this->asArray()
 					->where(['slug' => $slug])
 					->first();

@@ -2,17 +2,12 @@
 
 use CodeIgniter\Model;
 
-class BlogModel extends Model{
+class UserModel extends Model{
 	protected $table = 'user';
 	protected $allowedFields =['username','password','status'];
 
-	public function getPosts($slug = null){
-		if(!$slug){
-			return $this->findAll();
-		}
-
+	public function getUser(){
 		return $this->asArray()
-					->where(['slug' => $slug])
 					->first();
 	}
 } 
