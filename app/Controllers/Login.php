@@ -1,5 +1,5 @@
 <?php namespace App\Controllers;
-
+use App\Models\UserModel;
 class Login extends BaseController{
 
 	public function index(){
@@ -10,8 +10,8 @@ class Login extends BaseController{
 
 		if ($this->request->getMethod() == 'post') {
 			$rules = [
-				'username' => 'required|min_length[6]|max_length[50]|valid_email',
-				'password' => 'required|min_length[8]|max_length[255]|validateUser[username,password]',
+				'username' => 'required|min_length[2]|max_length[50]',
+				'password' => 'required|min_length[2]|max_length[255]|validateUser[username,password]',
 			];
 
 			$errors = [
@@ -29,7 +29,7 @@ class Login extends BaseController{
 											->first();
 
 				$this->setUserSession($user);
-				return redirect()->to('dashboard');
+				return redirect()->to('/blog/create');
 
 			}
 		}
