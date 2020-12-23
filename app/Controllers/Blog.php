@@ -1,45 +1,109 @@
 <?php namespace App\Controllers;
 
+use CodeIgniter\RESTful\ResourceController;
 
-use App\Models\BlogModel;
-class Blog extends BaseController
+class Blog extends ResourceController
 {
-	function post($slug){
-		$model = new BlogModel(); 
-		$data['post'] = $model->getPosts($slug);
+    protected $modelName = 'App\Models\BlogModel';
+    protected $format = 'json';
+
+    public function index(){
+        $posts = $this->model->findAll();
+        return $this->respond($posts);
+    }
+
+    public function create(){
+        helper(['form']);
+
+        $rules = [
+            'title' => 'required|min_length[6]',
+            'description' => 'required',
+            'featured_image' => 'uploaded[featured_image]|max_size[featured_image, 1024]|is_image[featured_image]'
+        ];
+
+        if(!$this->validate($rules)){
+            return $this->fail($this->validator->getErrors());
+        }else{
+
+            //Get the file
+            $file = $this->request->getFile('featured_image');
+            if(! $file->isValid())
+                return $this->fail($file->getErrorString());
+
+            $file->move('./assets/uploads');
+
+            $data = [
+                'post_title' => $this->request->getVar('title'),
+                'post_description' => $this->request->getVar('description'),
+                'post_featured_image' => $file->getName()
+            ];
+
+            $post_id = $this->model->insert($data);
+            $data['post_id'] = $post_id;
+            return $this->respondCreated($data);
+        }
+    }
+
+    public function show($id = null){
+        $data = $this->model->find($id);
+        return $this->respond($data);
+    }
+
+    public function update($id = null){
+        helper(['form', 'array']);
+
+        $rules = [
+            'title' => 'required|min_length[6]',
+            'description' => 'required',
+        ];
 
 
-		echo view('templates/header', $data);
-		echo view('blog/post');
-		echo view('templates/footer');
+        $fileName = dot_array_search('featured_image.name', $_FILES);
 
-	}
+        if($fileName != ''){
+            $img = ['featured_images' => 'uploaded[featured_image]|max_size[featured_image, 1024]|is_image[featured_image]'];
+            $rules = array_merge($rules, $img);
+        }
 
-	function create(){
-		helper('form');
-		$model = new BlogModel();
 
-		if(! $this->validate([
-			'title' => 'required|min_length[3]|max_length[255]',
-			'body' => 'required'
-		])){
-			echo view('templates/header');
-			echo view('blog/create');
-			echo view('templates/footer');
-		}else{
-			$model -> save(
-				[
-					'title' => $this->request->getVar('title'),
-					'body' => $this->request->getVar('body'),
-					'slug' => url_title($this->request->getVar('title')),
-				]
-			);	
 
-			$session = \Config\Services::session();
-			$session->setFlashdata('success', 'New post was uploaded');
+        if(!$this->validate($rules)){
+            return $this->fail($this->validator->getErrors());
+        }else{
+            //$input = $this->request->getRawInput();
 
-			return redirect()->to('/');	
-		}
-	}
-	//--------------------------------------------------------------------
+
+
+            $data = [
+                'post_id' => $id,
+                'post_title' => $this->request->getVar('title'),
+                'post_description' => $this->request->getVar('description'),
+            ];
+
+            if($fileName != ''){
+
+                $file = $this->request->getFile('featured_image');
+                if(! $file->isValid())
+                    return $this->fail($file->getErrorString());
+
+                $file->move('./assets/uploads');
+                $data['post_featured_image'] = $file->getName();
+            }
+
+            $this->model->save($data);
+            return $this->respond($data);
+        }
+
+    }
+
+    public function delete($id = null){
+        $data = $this->model->find($id);
+        if($data){
+            $this->model->delete($id);
+            return $this->respondDeleted($data);
+        }else{
+            return $this->failNotFound('Item not found');
+        }
+    }
+
 }
