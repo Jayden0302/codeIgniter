@@ -3,16 +3,9 @@
 use CodeIgniter\Model;
 
 class BlogModel extends Model{
-	protected $table = 'posts';
-	protected $allowedFields =['title','slug','body'];
 
-	public function getPosts($slug = null){
-		if(!$slug){
-			return $this->findAll();
-		}
-		
-		return $this->asArray()
-					->where(['slug' => $slug])
-					->first();
-	}
+    protected $table = 'blog';
+    protected $primaryKey = 'post_id';
+    protected $allowedFields = ['post_title','post_description'];
+
 } 

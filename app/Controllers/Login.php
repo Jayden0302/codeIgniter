@@ -24,10 +24,8 @@ class Login extends BaseController{
 				$data['validation'] = $this->validator;
 			}else{
 				$model = new UserModel();
-
 				$user = $model->where('username', $this->request->getVar('username'))
 											->first();
-
 				$this->setUserSession($user);
 				return redirect()->to('/blog/create');
 
