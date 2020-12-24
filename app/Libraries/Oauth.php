@@ -1,6 +1,8 @@
 <?php namespace App\Libraries;
 
-use  \OAuth2\Storage\Pdo;
+use \App\Libraries\CustomOauthStorage;
+use OAuth2\Storage\Pdo;
+
 
 class Oauth{
     var $server;
