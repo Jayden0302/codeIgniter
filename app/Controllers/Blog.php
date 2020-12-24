@@ -24,8 +24,6 @@ class Blog extends ResourceController
         if(!$this->validate($rules)){
             return $this->fail($this->validator->getErrors());
         }else{
-
-            //Get the file
             $file = $this->request->getFile('featured_image');
             if(! $file->isValid())
                 return $this->fail($file->getErrorString());
@@ -57,7 +55,6 @@ class Blog extends ResourceController
             'description' => 'required',
         ];
 
-
         $fileName = dot_array_search('featured_image.name', $_FILES);
 
         if($fileName != ''){
@@ -66,13 +63,9 @@ class Blog extends ResourceController
         }
 
 
-
         if(!$this->validate($rules)){
             return $this->fail($this->validator->getErrors());
         }else{
-            //$input = $this->request->getRawInput();
-
-
 
             $data = [
                 'post_id' => $id,
@@ -81,7 +74,6 @@ class Blog extends ResourceController
             ];
 
             if($fileName != ''){
-
                 $file = $this->request->getFile('featured_image');
                 if(! $file->isValid())
                     return $this->fail($file->getErrorString());
@@ -98,6 +90,7 @@ class Blog extends ResourceController
 
     public function delete($id = null){
         $data = $this->model->find($id);
+
         if($data){
             $this->model->delete($id);
             return $this->respondDeleted($data);
